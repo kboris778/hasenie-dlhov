@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#1a3360">
+  <meta name="description" content="Hasenie dlhov – splácajte osobné dlhy a haste ohne na lúke.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Hasenie">
+  <meta name="format-detection" content="telephone=no">
+  <title>Hasenie dlhov</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="preload" href="fonts/fraunces-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="world">
+    <div class="sky">
+      <div class="sun"></div>
+      <div class="sunbeam"></div>
+      <div class="cloud cloud-a" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="cloud cloud-b" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="cloud cloud-c" aria-hidden="true"><span></span><span></span><span></span></div>
+      <i class="mote m1"></i><i class="mote m2"></i><i class="mote m3"></i><i class="mote m4"></i>
+    </div>
+    <div class="layer hills shift-far"><div id="hills" class="hills-art"></div></div>
+    <div class="layer forest shift-mid">
+      <div id="forest" class="forest-art"></div>
+      <div id="tree-lights"></div>
+    </div>
+    <div class="layer ground shift-near">
+      <div id="ground" class="ground-art"></div>
+      <div id="ground-lights"></div>
+    </div>
+    <div class="haze"></div>
+    <div id="fires" class="fires shift-near"></div>
+    <div id="labels" class="labels shift-near"></div>
+    <div class="layer fore shift-front"><div id="foreground" class="foreground-art"></div></div>
+    <div class="vignette"></div>
+  </div>
+
+  <header class="hud">
+    <div class="hud-inner">
+      <div class="brand-row">
+        <div class="brand">
+          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M16 3c2 4 2 6 1 8 3-1 6 1 7 4 2 5-1 11-8 13-8 2-13-3-12-9 1-4 4-6 6-8 0 3 2 4 3 4-1-4 0-8 3-12z" fill="#ffb15a"/>
+            <path d="M16 14c1.2 2 1 3.2.4 4.2 1.6-.4 3 .6 3.4 2.2.8 2.4-.6 5.2-3.8 6-3.6.8-6-1.4-5.6-4 .3-1.8 1.8-2.8 2.8-3.6.1 1.4 1 2 1.6 1.8-.4-2 .2-4.2 1.2-6.6z" fill="#fff1c9"/>
+          </svg>
+          <div>
+            <h1>Hasenie dlhov</h1>
+            <p id="status-line">Každý dlh je oheň.</p>
+          </div>
+        </div>
+        <button id="settings-btn" class="icon-btn" type="button" aria-label="Nastavenia">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M19.4 13.5a7.7 7.7 0 0 0 .1-1.5 7.7 7.7 0 0 0-.1-1.5l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-2.6-1.5L14 2h-4l-.4 2.5a7.6 7.6 0 0 0-2.6 1.5l-2.4-1-2 3.4 2 1.6a7.7 7.7 0 0 0 0 3l-2 1.6 2 3.4 2.4-1a7.6 7.6 0 0 0 2.6 1.5L10 22h4l.4-2.5a7.6 7.6 0 0 0 2.6-1.5l2.4 1 2-3.4-2-1.6zM12 15.2A3.2 3.2 0 1 1 12 8.8a3.2 3.2 0 0 1 0 6.4z"/>
+          </svg>
+        </button>
+      </div>
+      <div id="metrics" class="metrics" hidden>
+        <div class="metric">
+          <span>Zostáva</span>
+          <strong id="remain">0 €</strong>
+        </div>
+        <div class="metric">
+          <span>Zaplatené</span>
+          <strong id="paid">0 €</strong>
+        </div>
+        <div class="metric metric-pct">
+          <span>Uhasené</span>
+          <strong id="pct">0 %</strong>
+        </div>
+        <div id="bar-track" class="bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Uhasené">
+          <span id="bar"></span>
+        </div>
+        <p id="total-line" class="total-line"></p>
+      </div>
+    </div>
+  </header>
+
+  <section id="empty" class="empty" hidden>
+    <svg class="empty-art" viewBox="0 0 160 80" aria-hidden="true">
+      <ellipse cx="80" cy="58" rx="48" ry="12" fill="#d9cbb8"/>
+      <ellipse cx="34" cy="56" rx="12" ry="8" fill="#8d867c"/>
+      <ellipse cx="58" cy="46" rx="11" ry="8" fill="#a39b90"/>
+      <ellipse cx="86" cy="42" rx="12" ry="8" fill="#8f877c"/>
+      <ellipse cx="114" cy="50" rx="12" ry="8" fill="#b1a89c"/>
+      <ellipse cx="128" cy="60" rx="11" ry="8" fill="#7d776e"/>
+      <rect x="58" y="52" width="48" height="6" rx="3" fill="#4a382c" transform="rotate(-8 82 55)"/>
+      <rect x="64" y="54" width="40" height="5" rx="2.5" fill="#2c2118" transform="rotate(12 84 56)"/>
+    </svg>
+    <h2>Lúka je pokojná</h2>
+    <p>Pridajte veriteľa a zapáľte prvý oheň. Každá splátka ho zmenší, až ostane len chladné ohnisko.</p>
+    <button id="empty-add" class="btn btn-ember" type="button">Zapáliť prvý oheň</button>
+  </section>
+
+  <button id="fab" class="fab" type="button" hidden aria-label="Pridať veriteľa">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11 5h2v14h-2zM5 11h14v2H5z"/></svg>
+  </button>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="overlay" hidden></div>
+  <noscript><p class="noscript">Hasenie dlhov potrebuje JavaScript.</p></noscript>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
